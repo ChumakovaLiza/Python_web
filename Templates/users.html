@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+<h1> User list</h1>
+{%for user in a%}
+<a href="http://127.0.0.1:5000/user/{{user['id']}}" target="_blank"> {{user['name']}} {{user['surname']}} </a>
+<br>
+{% endfor %}
+
+<form action="add_user" method="post">
+    <p>
+        <label for="name">Name:</label><br>
+        <input type="text" name="name"><br>
+    </p>
+    <p>
+        <label for="surname">Surname:</label><br>
+        <input type="text" name="surname">
+    </p>
+    <p>
+        <label for="age">Age:</label><br>
+        <input type="number" name="age">
+        <input type="submit" value="Submit">
+    </p>
+
+</form>
+</body>
+</html>

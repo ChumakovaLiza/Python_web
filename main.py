@@ -1,4 +1,4 @@
-from flask import Flask, redirect, make_response, abort
+from flask import Flask, redirect, make_response, abort, request, render_template
 
 app = Flask(__name__)
 a = [{'name': 'Alex', 'id': '1', 'surname': 'Turner', 'age': 36},
@@ -8,12 +8,7 @@ b = ''
 
 @app.route('/users')
 def users():
-    c = ''
-    for i in range(len(a)):
-        b = ''
-        b = b + a[i]['name'] + ' ' + a[i]['surname'] + '<br>'
-        c = c + '<a href="http://127.0.0.1:5000/user/%s" target="_blank"> %s</a>' % (a[i]['id'], b)
-    response = make_response('<h1> %s</h1> ' %(c))
+    response = make_response(render_template('users.html', a=a, b=b))
     return response
 
 
@@ -25,12 +20,27 @@ def home():
 @app.route('/user/<idd>')
 def user(idd):
     print(idd)
+    print(a)
     for i in range(len(a)):
         if idd == a[i]['id']:
-            response = make_response('<h1>ФИО:&nbsp %s &nbsp %s <br> Возраст:&nbsp %s </h1> ' % (a[i]['name'], a[i]['surname'], a[i]['age']))
+            response = render_template('idd.html', a=a[i])
             return response
     else:
         abort(404)
+
+
+@app.route('/add_user', methods=['post'])
+def add_user():
+    m = 0
+    for i in range(len(a)):
+        if int(a[i]['id']) > m:
+            m = int(a[i]['id'])
+    name = request.form.get('name')
+    surname = request.form.get('surname')
+    age = request.form.get('age')
+    new_user = {'name': name, 'id': str(m+1), 'surname': surname, 'age': age}
+    a.append(new_user)
+    return redirect('/users')
 
 
 if __name__ == '__main__':
